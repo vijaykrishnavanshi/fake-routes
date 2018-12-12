@@ -13,18 +13,18 @@ app.use(bodyParser.urlencoded({
 
 app.use(morgan());
 
-app.get('/partner', (request, response) => {
+app.get('/', (request, response) => {
   return response.send('Hello from Express!')
 });
 
-app.post('/partner', (request, response) => {
+app.post('/', (request, response) => {
   console.log("request.body: ", request.body);
   const json = JSON.stringify(request.body);
   fs.writeFileSync(`response.json`, json, 'utf8');
   return response.status(200).send();
 });
 
-app.listen(port, (err) => {
+app.listen(process.env.PORT || port, (err) => {
   if (err) {
     return console.log('something bad happened', err)
   }
