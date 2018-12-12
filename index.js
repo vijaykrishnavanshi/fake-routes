@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const connectToDatabase = require("./connectDB");
+const Result = require("./result");
 var fs = require('fs');
 const port = 4000
 
@@ -13,14 +15,15 @@ app.use(bodyParser.urlencoded({
 
 app.use(morgan());
 
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
   return response.send('Hello from Express!')
 });
 
-app.post('/', (request, response) => {
+app.post('/', async (request, response) => {
+  await connectToDatabase();
   console.log("request.body: ", request.body);
-  const json = JSON.stringify(request.body);
-  fs.writeFileSync(`response.json`, json, 'utf8');
+  const result = new Result({ responseBody: request.body });
+  await result.save();
   return response.status(200).send();
 });
 
