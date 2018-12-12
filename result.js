@@ -10,6 +10,7 @@ autoIncrement.initialize(connection);
 
 const ResultSchema = new mongoose.Schema({
   responseBody: { type: Object, required: true },
+  recievedAt: { type: Date, default: Date.now }, 
 });
 
 ResultSchema.plugin(autoIncrement.plugin, { model: "Result", field: "result_id" });

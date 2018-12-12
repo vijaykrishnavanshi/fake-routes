@@ -16,7 +16,17 @@ app.use(bodyParser.urlencoded({
 app.use(morgan());
 
 app.get('/', async (request, response) => {
-  return response.send('Hello from Express!')
+  await connectToDatabase();
+  const criteria = {};
+  const projection = {};
+  const option = {
+    sort: {
+      recievedAt: -1,
+    },
+    limit: 5,
+  };
+  const results = await Result.find(criteria, projection, option);
+  return response.json({ results });
 });
 
 app.post('/', async (request, response) => {
@@ -24,7 +34,7 @@ app.post('/', async (request, response) => {
   console.log("request.body: ", request.body);
   const result = new Result({ responseBody: request.body });
   await result.save();
-  return response.status(200).send();
+  return response.status(200).json({});
 });
 
 app.listen(process.env.PORT || port, (err) => {
